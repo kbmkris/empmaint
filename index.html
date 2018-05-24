@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Employee Administration</title>
+    <link rel="stylesheet" href="css/index.css" />
+    <script src="src/js/jquery-3.3.1.min.js" ></script>
+    <script src="src/js/initialData.js"></script>
+    <script>
+     $(document).ready (function () {
+       var dt = [];
+       if (typeof(Storage) !== "undefined") {
+         console.log('Storage is available. Proceed further');
+       } else {
+         console.log('local Storage is not available. Notify User');
+       }
+       //load test data if nothing present in local Storage
+       if (!localStorage.getItem("employee")) {
+          console.log('data does not exist - so loading from testData'); 
+          localStorage.setItem("employee",JSON.stringify(testData));
+       } else {
+         console.log('data exists');
+       }
+       $('#addEmployee').click (function() {
+         $('#maindiv').load("src/addEmployee.html");
+       });
+
+       $('#maintain').click (function() {
+         $('#maindiv').load("src/maintain.html");
+       });
+     });
+    </script>
+  </head>
+  <body>
+    <div class="header">
+      <ul>
+        <li class="nav-bar"><img src="img/management.png"></li>
+        <li class="nav-bar"><h4>Employee Administration</h4></li>
+        <li class="nav-bar"><a href="#" class="mhref" id="addEmployee">Add new Employee</a></li>
+        <li class="nav-bar"><a href="#" class="mhref" id="maintain">Maintain</a></li>
+      </ul>
+    </div>
+    <div class="main-content" id="maindiv"></div>
+  </body>
+</html>

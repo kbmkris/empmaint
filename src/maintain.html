@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Employee Administration</title>
+    <link rel="stylesheet" href="css/index.css" />
+    <script src="src/js/jquery-3.3.1.min.js"></script>
+    <script src="src/js/validateForm.js"></script>
+    <script>
+      var data = [];
+      var empDetails = {};
+      var sapId = 0;
+      var keyClicked = -1;
+      $(document).ready(function () {
+        data = JSON.parse(window.localStorage.getItem("employee"));
+        var html = "<h2>Maintain Employee Information</h2>"
+        html +='<table id="vtable"><tr><th>SAP ID</th><th>First Name</th><th>Last Name</th>';
+        html += '<th>Mobile</th><th>Email Id</th><th class="img"></th><th class="img"></th></tr>';
+        $.each(data,function(key,value) {
+          html += "<tr><td id=" + value.sapId + ">" + value.sapId + "</td><td>" + value.details.fName;
+          html += "</td><td>" + value.details.lName + "</td><td>";
+          html += value.details.mobile + "</td><td>" + value.details.emailId;
+          html += '<td class="img" id="#edit"><a href=# ><img src="img/edit.png"></a></td>';
+          html += '<td class="img" id="#delete"><a href=# ><img src="img/delete.png"></a></td>';
+          html += "</td></tr>";
+        });
+        html += "</table>";
+        $(html).appendTo("#mdiv");
+       // event handler for table columns (which field is clicked - edit/delete)
+        $('#vtable tr td').on("click", function() {
+          keyClicked = -1;
+          //get SapId by going to closest tr and get the first child.
+          //this is a dangerous design as shifting column will impact
+          sapId= $(this).closest("tr").find("td:nth-child(1)").attr("id");
+          //identify the index of that sapid in data
+          $.each(data, function(key,value) {
+            if (value.sapId == sapId) {
+              keyClicked = key;
+              empDetails = value.details;
+              return false;
+            }
+          });
+
+          if ($(this).attr('id') == '#delete') {
+            if (keyClicked == -1) {
+              alert('Error deleting employee details - could not find it in data');
+            } else {
+              data.splice(keyClicked,1);
+              localStorage.setItem("employee", JSON.stringify(data));
+            }
+            $('#maindiv').empty();
+            $('#maindiv').load("src/maintain.html");
+          } else if ($(this).attr('id') == '#edit') {
+            $('#fName').val(empDetails.fName);
+            $('#lName').val(empDetails.lName);
+            $('#sapId').val(sapId);
+            $('#mobile').val(empDetails.mobile);
+            $('#emailId').val(empDetails.emailId);
+            $('#modal').show();
+          }
+        }); //on.click
+      }); //ready
+    </script>
+  </head>
+  <body>
+    <div class="container" id="mdiv">
+    </div>
+    <div id="modal" class="modal">
+      <div id="modal-content" class="modal-content">
+        <h2>Update Employee Details</h2>
+        <form id="updForm">
+          <label class="label" for="fName">First Name :</label>
+          <input class="fields" type="text" id="fName" placeholder="First Name"></input>
+          <br />
+          <label class="label" for="lName">Last Name :</label>
+          <input class="fields" type="text" id="lName" placeholder="Last Name"></input>
+          <br />
+          <label class="label" for="sapId">Employee ID (SAP #) :</label>
+          <input class="fields" type="number" id="sapId" placeholder="0000000" readonly disabled></input>
+          <br />
+          <label class="label" for="mobile">Mobile Number :</label>
+          <input class="fields" type="number" id="mobile" placeholder="9999999999"></input>
+          <br />
+          <label class="label" for="emailId">Email ID :</label>
+          <input class="fields" type="email" id="emailId" placeholder="emailId@test.com"></input>
+          <br />
+          <input class="bUpdate" type="submit" id="bUpdate" value="Update"></input>
+          <input class="bCancel" type="submit" id="bCancel" value="Cancel"></input>
+          <br />
+        </form>
+      </div>
+    </div>
+  </body>
+  <script>
+    //event handler for modal form (update/cancel)
+    $('input').on("click",function(){
+      console.log($(this).attr('id'));
+      if ($(this).attr('id') == 'bUpdate') {
+        console.log('going to update');
+        validateForm(false);
+        console.log('updated');
+      } else if ($(this).attr('id') == 'bCancel') {
+        console.log("inside cancel");
+        $("#modal").hide();
+      }
+    });
+  </script>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Employee Administration</title>
+    <link rel="stylesheet" href="css/index.css" />
+    <script src="src/js/jquery-3.3.1.min.js"></script>
+    <script src="src/js/validateForm.js"></script>
+    <script>
+      var data = [];
+      $('document').ready(function() {
+        if (!localStorage.getItem('employee')) {
+          data = [];
+        } else {
+          data = JSON.parse(localStorage.getItem('employee'));
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Add Employee Details</h2>
+      <form id="addForm">
+        <label class="label" for="fName">First Name :</label>
+        <input class="fields" type="text" id="fName" placeholder="First Name"></input>
+        <br />
+        <label class="label" for="lName">Last Name :</label>
+        <input class="fields" type="text" id="lName" placeholder="Last Name"></input>
+        <br />
+        <label class="label" for="sapId">Employee ID (SAP #) :</label>
+        <input class="fields" type="number" id="sapId" placeholder="0000000"></input>
+        <br />
+        <label class="label" for="mobile">Mobile Number :</label>
+        <input class="fields" type="number" id="mobile" placeholder="9999999999"></input>
+        <br />
+        <label class="label" for="emailId">Email ID :</label>
+        <input class="fields" type="email" id="emailId" placeholder="emailId@test.com"></input>
+        <br />
+        <input class="bSubmit" type="submit" id="bsubmit" value="Add"></input>
+        <br />
+      </form>
+    </div>
+    <script>
+      $('#bsubmit').click (function () {
+         validateForm(true); //true is to say record has to be added
+        return false;
+      });
+    </script>
+  </body>
+</html>
